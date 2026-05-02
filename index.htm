@@ -18,6 +18,21 @@
       margin-bottom:5px;
     }
 
+    .dot {
+      height:8px;
+      width:8px;
+      background:#22c55e;
+      border-radius:50%;
+      display:inline-block;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%{opacity:1;}
+      50%{opacity:0.3;}
+      100%{opacity:1;}
+    }
+
     .total {
       text-align: center;
       font-size: 20px;
@@ -59,33 +74,27 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* popup */
-    .popup {
+    /* 📲 WhatsApp style notification */
+    .notify {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #22c55e;
-      color: black;
-      padding: 12px 15px;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      color: white;
+      padding: 12px 16px;
       border-radius: 10px;
-      font-size: 14px;
-      display: none;
+      width: 90%;
+      max-width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: 0.5s;
+      z-index: 999;
     }
 
-    /* live dot */
-    .dot {
-      height:8px;
-      width:8px;
-      background:#22c55e;
-      border-radius:50%;
-      display:inline-block;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%{opacity:1;}
-      50%{opacity:0.3;}
-      100%{opacity:1;}
+    .notify-title {
+      font-weight: bold;
+      color: #22c55e;
+      margin-bottom: 3px;
     }
   </style>
 </head>
@@ -110,9 +119,13 @@
   </tr>
 </table>
 
-<div id="popup" class="popup"></div>
+<!-- Notification -->
+<div id="notify" class="notify">
+  <div class="notify-title">New Payment</div>
+  <div id="notify-text"></div>
+</div>
 
-<!-- 🔊 sound -->
+<!-- Sound -->
 <audio id="sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
 
 <script>
@@ -133,15 +146,18 @@ function getDate(){
   });
 }
 
-function showPopup(name, amount, city){
-  let popup = document.getElementById("popup");
-  popup.innerText = `${name} from ${city} paid ₹${amount}`;
-  popup.style.display = "block";
+function showNotify(name, amount, city){
+  let box = document.getElementById("notify");
+  let text = document.getElementById("notify-text");
+
+  text.innerText = `${name} from ${city} paid ₹${amount}`;
+
+  box.style.top = "20px";
 
   document.getElementById("sound").play();
 
   setTimeout(()=>{
-    popup.style.display = "none";
+    box.style.top = "-100px";
   }, 3000);
 }
 
@@ -188,10 +204,10 @@ function addRow(){
     <td>${getDate()}</td>
   `;
 
-  showPopup(name, amount, city);
+  showNotify(name, amount, city);
 }
 
-// auto add
+// auto run
 setInterval(addRow, 3000);
 </script>
 
