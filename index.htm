@@ -10,14 +10,11 @@
       padding: 20px;
     }
 
-    h2 {
-      text-align: center;
-    }
+    h2 { text-align: center; }
 
     .total {
       text-align: center;
       margin-bottom: 10px;
-      font-size: 18px;
       color: #22c55e;
     }
 
@@ -27,11 +24,10 @@
       background: #1e293b;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 15px rgba(0,255,150,0.2);
     }
 
     th, td {
-      padding: 12px;
+      padding: 10px;
       text-align: center;
       border-bottom: 1px solid #334155;
     }
@@ -46,7 +42,6 @@
       font-weight: bold;
     }
 
-    /* 🔥 Animation */
     .new-row {
       animation: glow 1s ease-in-out;
     }
@@ -70,64 +65,88 @@
   <tr>
     <th>User</th>
     <th>Transactions</th>
-    <th>Amount (₹)</th>
+    <th>Amount</th>
+    <th>Date</th>
   </tr>
-
-  <tr>
-    <td>Ramesh Kumar</td>
-    <td>3</td>
-    <td class="amount">800</td>
-  </tr>
-
-  <tr>
-    <td>Suresh Patel</td>
-    <td>2</td>
-    <td class="amount">650</td>
-  </tr>
-
 </table>
 
 <script>
-const names = [
-  "Amit Singh","Rahul Verma","Neha Sharma",
-  "Ankit Yadav","Priya Gupta","Vikas Kumar"
+let names = [
+  "Ramesh Kumar","Suresh Patel","Amit Singh","Rahul Verma",
+  "Neha Sharma","Ankit Yadav","Priya Gupta","Vikas Kumar",
+  "Manoj Singh","Pooja Verma","Deepak Yadav","Kiran Gupta"
 ];
 
-function addRow() {
-  let table = document.getElementById("table");
-
-  let name = names[Math.floor(Math.random()*names.length)];
-  let txn = Math.floor(Math.random()*5)+1;
-  let amount = Math.floor(Math.random()*1000)+200;
-
-  let row = table.insertRow(-1);
-  row.classList.add("new-row");
-
-  row.innerHTML = `
-    <td>${name}</td>
-    <td>${txn}</td>
-    <td class="amount">${amount}</td>
-  `;
-
-  updateTotal();
+function getDate() {
+  let now = new Date();
+  return now.toLocaleDateString('en-IN', {
+    day:'numeric', month:'short', year:'numeric'
+  });
 }
 
-function updateTotal() {
-  let amounts = document.querySelectorAll(".amount");
+function saveData(data) {
+  localStorage.setItem("payments", JSON.stringify(data));
+}
+
+function loadData() {
+  return JSON.parse(localStorage.getItem("payments")) || [];
+}
+
+function renderTable(data) {
+  let table = document.getElementById("table");
+
+  // clear old rows
+  table.innerHTML = `
+    <tr>
+      <th>User</th>
+      <th>Transactions</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+  `;
+
   let total = 0;
 
-  amounts.forEach(el => {
-    total += parseInt(el.innerText);
+  data.forEach(row => {
+    let tr = table.insertRow(-1);
+    tr.innerHTML = `
+      <td>${row.name}</td>
+      <td>${row.txn}</td>
+      <td class="amount">${row.amount}</td>
+      <td>${row.date}</td>
+    `;
+    total += row.amount;
   });
 
   document.getElementById("totalAmount").innerText = total;
 }
 
-// initial total
-updateTotal();
+function addRow() {
+  let data = loadData();
 
-// हर 3 sec में new row add होगा
-setInterval(addRow, 3000);
+  if (names.length === 0) return;
+
+  let index = Math.floor(Math.random()*names.length);
+  let name = names.splice(index,1)[0];
+
+  let newEntry = {
+    name: name,
+    txn: Math.floor(Math.random()*5)+1,
+    amount: Math.floor(Math.random()*1000)+200,
+    date: getDate()
+  };
+
+  data.push(newEntry);
+  saveData(data);
+  renderTable(data);
+}
+
+// load on start
+let savedData = loadData();
+renderTable(savedData);
+
+// auto add new row
+setInterval(addRow, 4000);
 </script>
 
 </body>
