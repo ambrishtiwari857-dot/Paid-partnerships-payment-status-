@@ -12,6 +12,12 @@
 
     h2 { text-align: center; }
 
+    .live {
+      text-align:center;
+      color:#22c55e;
+      margin-bottom:5px;
+    }
+
     .total {
       text-align: center;
       font-size: 20px;
@@ -45,7 +51,7 @@
     }
 
     .new-row {
-      animation: fadeIn 0.8s ease;
+      animation: fadeIn 0.6s ease;
     }
 
     @keyframes fadeIn {
@@ -53,7 +59,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 🔔 Popup */
+    /* popup */
     .popup {
       position: fixed;
       bottom: 20px;
@@ -64,13 +70,22 @@
       border-radius: 10px;
       font-size: 14px;
       display: none;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      animation: slideIn 0.5s ease;
     }
 
-    @keyframes slideIn {
-      from { transform: translateX(-100px); opacity:0; }
-      to { transform: translateX(0); opacity:1; }
+    /* live dot */
+    .dot {
+      height:8px;
+      width:8px;
+      background:#22c55e;
+      border-radius:50%;
+      display:inline-block;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%{opacity:1;}
+      50%{opacity:0.3;}
+      100%{opacity:1;}
     }
   </style>
 </head>
@@ -78,6 +93,10 @@
 <body>
 
 <h2>💳 Live Payment Records</h2>
+
+<div class="live">
+  <span class="dot"></span> LIVE
+</div>
 
 <div class="total">
   Total Earnings: ₹<span id="total">0</span>
@@ -92,6 +111,9 @@
 </table>
 
 <div id="popup" class="popup"></div>
+
+<!-- 🔊 sound -->
+<audio id="sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
 
 <script>
 let names = [
@@ -113,12 +135,31 @@ function getDate(){
 
 function showPopup(name, amount, city){
   let popup = document.getElementById("popup");
-  popup.innerText = `${name} from ${city} just paid ₹${amount}`;
+  popup.innerText = `${name} from ${city} paid ₹${amount}`;
   popup.style.display = "block";
+
+  document.getElementById("sound").play();
 
   setTimeout(()=>{
     popup.style.display = "none";
   }, 3000);
+}
+
+function animateTotal(newAmount){
+  let el = document.getElementById("total");
+  let start = total - newAmount;
+  let end = total;
+  let step = Math.ceil(newAmount/20);
+
+  let interval = setInterval(()=>{
+    start += step;
+    if(start >= end){
+      el.innerText = end;
+      clearInterval(interval);
+    } else {
+      el.innerText = start;
+    }
+  }, 20);
 }
 
 function addRow(){
@@ -132,7 +173,8 @@ function addRow(){
   let monthly = Math.floor(Math.random()*5000)+1000;
 
   total += amount;
-  document.getElementById("total").innerText = total;
+
+  animateTotal(amount);
 
   let row = table.insertRow(-1);
   row.classList.add("new-row");
@@ -149,6 +191,7 @@ function addRow(){
   showPopup(name, amount, city);
 }
 
+// auto add
 setInterval(addRow, 3000);
 </script>
 
