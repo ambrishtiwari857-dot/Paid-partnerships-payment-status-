@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Payment Records</title>
+  <title>Live Payment Records</title>
   <style>
     body {
       font-family: Arial;
-      background: #0f172a;
+      background: linear-gradient(135deg,#0f172a,#1e293b);
       color: white;
       padding: 20px;
     }
@@ -14,8 +14,9 @@
 
     .total {
       text-align: center;
-      margin-bottom: 10px;
+      font-size: 20px;
       color: #22c55e;
+      margin-bottom: 15px;
     }
 
     table {
@@ -24,6 +25,7 @@
       background: #1e293b;
       border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,255,150,0.2);
     }
 
     th, td {
@@ -43,32 +45,53 @@
     }
 
     .new-row {
-      animation: glow 1s ease-in-out;
+      animation: fadeIn 0.8s ease;
     }
 
-    @keyframes glow {
-      0% { background: #065f46; }
-      100% { background: transparent; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 🔔 Popup */
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #22c55e;
+      color: black;
+      padding: 12px 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      display: none;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(-100px); opacity:0; }
+      to { transform: translateX(0); opacity:1; }
     }
   </style>
 </head>
 
 <body>
 
-<h2>💳 Payment Records</h2>
+<h2>💳 Live Payment Records</h2>
 
 <div class="total">
-  Total Earnings: ₹<span id="totalAmount">0</span>
+  Total Earnings: ₹<span id="total">0</span>
 </div>
 
 <table id="table">
   <tr>
     <th>User</th>
-    <th>Transactions</th>
-    <th>Amount</th>
+    <th>Details</th>
     <th>Date</th>
   </tr>
 </table>
+
+<div id="popup" class="popup"></div>
 
 <script>
 let names = [
@@ -77,76 +100,56 @@ let names = [
   "Manoj Singh","Pooja Verma","Deepak Yadav","Kiran Gupta"
 ];
 
-function getDate() {
-  let now = new Date();
-  return now.toLocaleDateString('en-IN', {
-    day:'numeric', month:'short', year:'numeric'
+let cities = ["Delhi","Mumbai","Kolkata","Chennai","Bangalore","Hyderabad"];
+
+let total = 0;
+
+function getDate(){
+  let d = new Date();
+  return d.toLocaleDateString('en-IN',{
+    day:'numeric',month:'short',year:'numeric'
   });
 }
 
-function saveData(data) {
-  localStorage.setItem("payments", JSON.stringify(data));
+function showPopup(name, amount, city){
+  let popup = document.getElementById("popup");
+  popup.innerText = `${name} from ${city} just paid ₹${amount}`;
+  popup.style.display = "block";
+
+  setTimeout(()=>{
+    popup.style.display = "none";
+  }, 3000);
 }
 
-function loadData() {
-  return JSON.parse(localStorage.getItem("payments")) || [];
-}
-
-function renderTable(data) {
+function addRow(){
   let table = document.getElementById("table");
 
-  // clear old rows
-  table.innerHTML = `
-    <tr>
-      <th>User</th>
-      <th>Transactions</th>
-      <th>Amount</th>
-      <th>Date</th>
-    </tr>
+  if(names.length === 0) return;
+
+  let name = names.splice(Math.floor(Math.random()*names.length),1)[0];
+  let city = cities[Math.floor(Math.random()*cities.length)];
+  let amount = Math.floor(Math.random()*1000)+200;
+  let monthly = Math.floor(Math.random()*5000)+1000;
+
+  total += amount;
+  document.getElementById("total").innerText = total;
+
+  let row = table.insertRow(-1);
+  row.classList.add("new-row");
+
+  row.innerHTML = `
+    <td>${name} (${city})</td>
+    <td class="amount">
+      ${name} paid ₹${amount}<br>
+      Monthly earnings: ₹${monthly}
+    </td>
+    <td>${getDate()}</td>
   `;
 
-  let total = 0;
-
-  data.forEach(row => {
-    let tr = table.insertRow(-1);
-    tr.innerHTML = `
-      <td>${row.name}</td>
-      <td>${row.txn}</td>
-      <td class="amount">${row.amount}</td>
-      <td>${row.date}</td>
-    `;
-    total += row.amount;
-  });
-
-  document.getElementById("totalAmount").innerText = total;
+  showPopup(name, amount, city);
 }
 
-function addRow() {
-  let data = loadData();
-
-  if (names.length === 0) return;
-
-  let index = Math.floor(Math.random()*names.length);
-  let name = names.splice(index,1)[0];
-
-  let newEntry = {
-    name: name,
-    txn: Math.floor(Math.random()*5)+1,
-    amount: Math.floor(Math.random()*1000)+200,
-    date: getDate()
-  };
-
-  data.push(newEntry);
-  saveData(data);
-  renderTable(data);
-}
-
-// load on start
-let savedData = loadData();
-renderTable(savedData);
-
-// auto add new row
-setInterval(addRow, 4000);
+setInterval(addRow, 3000);
 </script>
 
 </body>
