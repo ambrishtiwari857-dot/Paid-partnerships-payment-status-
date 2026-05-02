@@ -1,53 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Payment Records</title>
+  <title>Payment Records (Demo)</title>
   <style>
     body {
       font-family: Arial;
-      background: #f1f5f9;
+      background: #0f172a;
       margin: 0;
       padding: 20px;
+      color: white;
     }
 
     h2 {
       text-align: center;
+      margin-bottom: 20px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
+      background: #1e293b;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,255,150,0.2);
     }
 
     th, td {
       padding: 12px;
       text-align: center;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #334155;
     }
 
     th {
-      background: #0f172a;
-      color: white;
+      background: #020617;
+      color: #22c55e;
     }
 
     tr:hover {
-      background: #f9fafb;
+      background: #334155;
     }
 
     .amount {
       font-weight: bold;
-      color: green;
+      color: #22c55e;
+    }
+
+    .demo {
+      text-align:center;
+      margin-top:10px;
+      font-size:12px;
+      color:#94a3b8;
     }
   </style>
 </head>
 
 <body>
 
-<h2>Payment Records</h2>
+<h2>💳 Payment Records</h2>
 
 <table>
   <tr>
@@ -57,66 +66,52 @@
   </tr>
 
   <tr>
-    <td>+91 98XXXX4629</td>
+    <td>Ramesh Kumar</td>
+    <td>3</td>
+    <td class="amount">800.00</td>
+  </tr>
+
+  <tr>
+    <td>Suresh Patel</td>
+    <td>2</td>
+    <td class="amount">650.00</td>
+  </tr>
+
+  <tr>
+    <td>Amit Singh</td>
     <td>4</td>
-    <td class="amount">520.00</td>
+    <td class="amount">920.00</td>
   </tr>
 
   <tr>
-    <td>+91 98XXXX7838</td>
-    <td>2</td>
-    <td class="amount">505.00</td>
-  </tr>
-
-  <tr>
-    <td>+91 84XXXX9859</td>
-    <td>2</td>
-    <td class="amount">505.00</td>
-  </tr>
-
-  <tr>
-    <td>+91 82XXXX3711</td>
-    <td>2</td>
-    <td class="amount">505.00</td>
-  </tr>
-
-  <tr>
-    <td>+91 95XXXX1097</td>
+    <td>Rahul Verma</td>
     <td>1</td>
     <td class="amount">500.00</td>
   </tr>
 
   <tr>
-    <td>+91 90XXXX9586</td>
-    <td>1</td>
-    <td class="amount">500.00</td>
-  </tr>
-
-  <tr>
-    <td>+91 99XXXX3783</td>
-    <td>1</td>
-    <td class="amount">500.00</td>
-  </tr>
-
-  <tr>
-    <td>+91 96XXXX3724</td>
-    <td>44</td>
-    <td class="amount">335.00</td>
-  </tr>
-
-  <tr>
-    <td>+91 81XXXX5897</td>
-    <td>12</td>
-    <td class="amount">265.00</td>
-  </tr>
-
-  <tr>
-    <td>+91 83XXXX1841</td>
+    <td>Neha Sharma</td>
     <td>5</td>
-    <td class="amount">230.00</td>
+    <td class="amount">1200.00</td>
+  </tr>
+
+  <tr>
+    <td>Priya Gupta</td>
+    <td>2</td>
+    <td class="amount">480.00</td>
+  </tr>
+
+  <tr>
+    <td>Ankit Yadav</td>
+    <td>6</td>
+    <td class="amount">1500.00</td>
   </tr>
 
 </table>
+
+<div class="demo">
+  Demo UI Only – Not Real Payment Data
+</div>
 
 </body>
 </html>
