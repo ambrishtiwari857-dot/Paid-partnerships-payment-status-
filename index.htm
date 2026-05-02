@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Payment Records (Demo)</title>
+  <title>Payment Records</title>
   <style>
     body {
       font-family: Arial;
       background: #0f172a;
-      margin: 0;
-      padding: 20px;
       color: white;
+      padding: 20px;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
+    }
+
+    .total {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #22c55e;
     }
 
     table {
@@ -36,20 +41,19 @@
       color: #22c55e;
     }
 
-    tr:hover {
-      background: #334155;
-    }
-
     .amount {
-      font-weight: bold;
       color: #22c55e;
+      font-weight: bold;
     }
 
-    .demo {
-      text-align:center;
-      margin-top:10px;
-      font-size:12px;
-      color:#94a3b8;
+    /* 🔥 Animation */
+    .new-row {
+      animation: glow 1s ease-in-out;
+    }
+
+    @keyframes glow {
+      0% { background: #065f46; }
+      100% { background: transparent; }
     }
   </style>
 </head>
@@ -58,7 +62,11 @@
 
 <h2>💳 Payment Records</h2>
 
-<table>
+<div class="total">
+  Total Earnings: ₹<span id="totalAmount">0</span>
+</div>
+
+<table id="table">
   <tr>
     <th>User</th>
     <th>Transactions</th>
@@ -68,50 +76,59 @@
   <tr>
     <td>Ramesh Kumar</td>
     <td>3</td>
-    <td class="amount">800.00</td>
+    <td class="amount">800</td>
   </tr>
 
   <tr>
     <td>Suresh Patel</td>
     <td>2</td>
-    <td class="amount">650.00</td>
-  </tr>
-
-  <tr>
-    <td>Amit Singh</td>
-    <td>4</td>
-    <td class="amount">920.00</td>
-  </tr>
-
-  <tr>
-    <td>Rahul Verma</td>
-    <td>1</td>
-    <td class="amount">500.00</td>
-  </tr>
-
-  <tr>
-    <td>Neha Sharma</td>
-    <td>5</td>
-    <td class="amount">1200.00</td>
-  </tr>
-
-  <tr>
-    <td>Priya Gupta</td>
-    <td>2</td>
-    <td class="amount">480.00</td>
-  </tr>
-
-  <tr>
-    <td>Ankit Yadav</td>
-    <td>6</td>
-    <td class="amount">1500.00</td>
+    <td class="amount">650</td>
   </tr>
 
 </table>
 
-<div class="demo">
-  Demo UI Only – Not Real Payment Data
-</div>
+<script>
+const names = [
+  "Amit Singh","Rahul Verma","Neha Sharma",
+  "Ankit Yadav","Priya Gupta","Vikas Kumar"
+];
+
+function addRow() {
+  let table = document.getElementById("table");
+
+  let name = names[Math.floor(Math.random()*names.length)];
+  let txn = Math.floor(Math.random()*5)+1;
+  let amount = Math.floor(Math.random()*1000)+200;
+
+  let row = table.insertRow(-1);
+  row.classList.add("new-row");
+
+  row.innerHTML = `
+    <td>${name}</td>
+    <td>${txn}</td>
+    <td class="amount">${amount}</td>
+  `;
+
+  updateTotal();
+}
+
+function updateTotal() {
+  let amounts = document.querySelectorAll(".amount");
+  let total = 0;
+
+  amounts.forEach(el => {
+    total += parseInt(el.innerText);
+  });
+
+  document.getElementById("totalAmount").innerText = total;
+}
+
+// initial total
+updateTotal();
+
+// हर 3 sec में new row add होगा
+setInterval(addRow, 3000);
+</script>
 
 </body>
 </html>
